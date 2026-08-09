@@ -29,11 +29,6 @@ PIAlert.classCooldowns = {
         -- Avenging Wrath (Retribution)
         31884, -- Avenging Wrath
     },
-    ["PRIEST"] = {
-        -- Void Eruption, Dark Archetype (Shadow)
-        152865, -- Void Eruption
-        347630, -- Dark Archetype
-    },
     ["ROGUE"] = {
         -- Shadow Dance, Adrenaline Rush
         360194, -- Deathmark (Subtlety)
@@ -164,6 +159,11 @@ end
 function PIAlert:HasCooldownOnFocus()
     local focusClass = self:GetFocusedClass();
     if not focusClass then
+        return false;
+    end
+    
+    -- Priests PI themselves, so skip them entirely (like healers/tanks)
+    if focusClass == "PRIEST" then
         return false;
     end
     

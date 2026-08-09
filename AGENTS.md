@@ -27,7 +27,7 @@ end
 
 ## PI Spell ID
 
-`10060` — Power Infusion. Always hardcoded in `PIAlert/Manager.lua`.
+`10060` — Power Infusion. Always hardcoded in `PikaJohnes/PIAlert/Manager.lua`.
 
 ## Checking Priest's Own PI on Focus
 
@@ -42,18 +42,18 @@ end
 
 ## Class Cooldown Table
 
-`PIAlert/Manager.lua:11-65` — spell IDs for DRUID/HUNTER/MAGE/PALADIN/PRIEST/ROGUE/WARRIOR are populated. WARLOCK, MONK, DEATHKNIGHT, EVOKER are **placeholders** (empty arrays) and trigger permissively on any buff until filled.
+`PikaJohnes/PIAlert/Manager.lua:12-59` — spell IDs for DPS classes. **PRIEST is excluded** (priests PI themselves, like healers/tanks). WARLOCK/MONK/DEATHKNIGHT/EVOKER are populated with placeholder spell IDs.
 
 ## Module Structure
 
 | Path | Responsibility |
 |---|---|
-| `PIAlert/Manager.lua` | PI cooldown polling, aura checking, state machine (IDLE/WAITING/ALERT) |
-| `FocusRemind/Tracker.lua` | Focus reminders on instance enter, 30s countdown, /party or /raid announcements |
-| `Panel/Frame.lua` | Glowing alert panel UI, draggable, animation |
-| `sound/sound.lua` | Audio playback (`PlaySoundFile`) |
-| `Config/Config.lua` | Slash commands `/pj`, `/pikajohnes`, config UI |
-| `PikaJohnes.lua` | Main entry, event routing, module initialization |
+| `PikaJohnes/PIAlert/Manager.lua` | PI cooldown polling, aura checking, state machine (IDLE/WAITING/ALERT) |
+| `PikaJohnes/FocusRemind/Tracker.lua` | Focus reminders on instance enter, 30s countdown, /party or /raid announcements |
+| `PikaJohnes/Panel/Frame.lua` | Glowing alert panel UI, draggable, animation |
+| `PikaJohnes/sound/sound.lua` | Audio playback (`PlaySoundFile`) |
+| `PikaJohnes/Config/Config.lua` | Slash commands `/pj`, `/pikajohnes`, config UI |
+| `PikaJohnes/PikaJohnes.lua` | Main entry, event routing, module initialization |
 
 ## State Machine (PIAlert)
 
@@ -74,4 +74,4 @@ Panel auto-shows/hides with state transitions. `Sound.Play()` fires on ALERT ent
 
 ## Spell IDs to Fill (TODO)
 
-WARLOCK, MONK, DEATHKNIGHT, EVOKER entries in `PIAlert/classCooldowns` need real spell IDs.
+All spell IDs in `PIAlert/classCooldowns` need verification against 12.1 PTR data.

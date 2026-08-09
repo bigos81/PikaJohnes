@@ -5,8 +5,7 @@
 ## Version: 0.1.0
 ## SavedVariables: PikaJohnesDB
 
-sound/telephone.ogg
-sound/sound.lua
+Sound/Sound.lua
 Panel/Frame.lua
 PIAlert/Manager.lua
 FocusRemind/Tracker.lua
