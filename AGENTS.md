@@ -6,7 +6,7 @@ WoW 12.1 addon that alerts a Priest when to cast Power Infusion (PI) on their fo
 
 - `## Interface: 120100` — numeric format, **not** dotted (`12.1.0`)
 - Sound files must be `.ogg`, not `.wav`
-- Directory is lowercase `sound/` (not `Sound/`)
+- Directory is uppercase `Sound/` (not lowercase)
 - TOC file: `PikaJohnes.toc`
 
 ## 12.1 API — Aura Checking
@@ -42,7 +42,7 @@ end
 
 ## Class Cooldown Table
 
-`PikaJohnes/PIAlert/Manager.lua:12-59` — spell IDs for DPS classes. **PRIEST is excluded** (priests PI themselves, like healers/tanks). WARLOCK/MONK/DEATHKNIGHT/EVOKER are populated with placeholder spell IDs.
+`PikaJohnes/PIAlert/Manager.lua:12-59` — spell IDs for DPS classes. **PRIEST is excluded** (priests PI themselves, like healers/tanks).
 
 ## Module Structure
 
@@ -51,7 +51,7 @@ end
 | `PikaJohnes/PIAlert/Manager.lua` | PI cooldown polling, aura checking, state machine (IDLE/WAITING/ALERT) |
 | `PikaJohnes/FocusRemind/Tracker.lua` | Focus reminders on instance enter, 30s countdown, /party or /raid announcements |
 | `PikaJohnes/Panel/Frame.lua` | Glowing alert panel UI, draggable, animation |
-| `PikaJohnes/sound/sound.lua` | Audio playback (`PlaySoundFile`) |
+| `PikaJohnes/Sound/Sound.lua` | Audio playback (`PlaySoundFile`) |
 | `PikaJohnes/Config/Config.lua` | Slash commands `/pj`, `/pikajohnes`, config UI |
 | `PikaJohnes/PikaJohnes.lua` | Main entry, event routing, module initialization |
 
@@ -71,7 +71,3 @@ Panel auto-shows/hides with state transitions. `Sound.Play()` fires on ALERT ent
 - `/pj status` — print current state, PI readiness, focus target
 - `/pj announce` — announce PI focus to party/raid
 - `/pj config` — open configuration UI
-
-## Spell IDs to Fill (TODO)
-
-All spell IDs in `PIAlert/classCooldowns` need verification against 12.1 PTR data.
