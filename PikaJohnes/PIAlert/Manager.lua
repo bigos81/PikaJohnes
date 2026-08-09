@@ -10,26 +10,24 @@ PIAlert.cooldownStart = nil;
 -- Format: [classKey] = {spellIds}
 PIAlert.classCooldowns = {
     ["DRUID"] = {
-        -- Feral: Berserk, Tiger's Fury, Frenzy
-        52610,  -- Berserk (Incarnation: King of the Jungle / Feral)
-        50385,  -- Tiger's Fury (Feral)
-        7384,   -- Frenzy
+        194223,  -- Celestial alignment (Balance)
+        106951,  -- Berserk (Feral)
     },
     ["HUNTER"] = {
         -- Aspect of the Wild, Barrage, Ascendance
-        19577,  -- Aspect of the Wild
-        264180, -- Barrage (Beast Cleave)
-        195365, -- Ascendance
+        193530,  -- Aspect of the Wild (Beast Mastery)
+        288613, -- Trueshot (Marksmanship)
+        266779, -- Coordinated Aspect (Survival)
     },
     ["MAGE"] = {
         -- Shatter (Frost), Combustion (Fire), Archmage's Power (Arcane)
-        111294, -- Shatter (Frost)
-        12042,  -- Combustion (Fire)
-        164246, -- Archmage's Power (Arcane)
+        365350, -- Arcane Surge (Arcane)
+        190319,  -- Combustion (Fire)
+        12472, -- Icy Veins (Frost)
     },
     ["PALADIN"] = {
         -- Avenging Wrath (Retribution)
-        318849, -- Avenging Wrath
+        31884, -- Avenging Wrath
     },
     ["PRIEST"] = {
         -- Void Eruption, Dark Archetype (Shadow)
@@ -38,30 +36,29 @@ PIAlert.classCooldowns = {
     },
     ["ROGUE"] = {
         -- Shadow Dance, Adrenaline Rush
-        137507, -- Shadow Dance
-        141846, -- Adrenaline Rush
+        360194, -- Deathmark (Subtlety)
+        13750, -- Adrenaline Rush (Outlaw)
+        121471, -- Shadow Blades (Assassination)
     },
     ["WARRIOR"] = {
         -- Bladestorm (Arms/Fury), Bloodbath, Recklessness
-        46924,  -- Bladestorm
-        31850,  -- Bloodbath
+        167105,  -- Colossus Smash (Arms)
         1719,   -- Recklessness
     },
     ["WARLOCK"] = {
-        -- Placeholder - TO BE FILLED WITH CORRECT SPELL IDS
-        -- Metamorphosis / Dark Soul: Misery / Demonic Power
+        205180,  -- Summon Darkglare (Affliction)
+        265187,  -- Summon Demonic Tyrant (Demonology)
+        1122,     -- Summon Infernal (Destruction)
     },
     ["MONK"] = {
-        -- Placeholder - TO BE FILLED WITH CORRECT SPELL IDS
-        -- Invoke Xuen, The White Tiger / Serenity
+        137639,  -- Storm, Earth, and Fire (Windwalker)
     },
     ["DEATHKNIGHT"] = {
-        -- Placeholder - TO BE FILLED WITH CORRECT SPELL IDS
-        -- Apocalypse / Bloodworms / Asphyxiation?
+        51271,  -- Pillar of Frost (Frost)
+        275699,  -- Apocalypse (Unholy)
     },
     ["EVOKER"] = {
-        -- Placeholder - TO BE FILLED WITH CORRECT SPELL IDS
-        -- Time Dilation / Empowered / Zephyr
+        375087,  -- Dream Breath (Devastation)
     },
 };
 
