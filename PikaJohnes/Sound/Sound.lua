@@ -3,7 +3,7 @@ Sound = {};
 -- Play telephone ring (falls back to game sound if no custom audio)
 local function playTelephone()
     -- Try playing custom sound file first (.ogg format for WoW 12.1)
-    local soundFile = "Interface\\Addons\\PikaJohnes\\sound\\telephone.ogg";
+    local soundFile = "Interface\\Addons\\PikaJohnes\\Sound\\telephone.ogg";
     
     -- Check if we can use it (file exists check in 12.1)
     pcall(function()
