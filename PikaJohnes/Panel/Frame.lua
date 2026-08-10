@@ -5,7 +5,7 @@ local PanelFrame = {};
 
 -- Create the main frame — click-through (EnableMouse false)
 local frame = CreateFrame("FRAME", "PikaJohnesPanelFrame", UIParent);
-frame:SetPoint("CENTER", UIParent, "CENTER", 0, 150);
+frame:SetPoint("CENTER", UIParent, "CENTER", 0, 350);
 frame:SetSize(48, 48);
 frame:SetToplevel(true);
 frame:SetFrameStrata("MEDIUM");
@@ -16,7 +16,22 @@ local iconTex = frame:CreateTexture(nil, "OVERLAY");
 iconTex:SetAllPoints();
 iconTex:SetTexture("Interface\\Icons\\spell_holy_powerinfusion");
 iconTex:SetVertexColor(1, 0.82, 0);
-iconTex:SetAlpha(0);
+
+-- Create blinking animation (autocast glow pattern)
+local animGroup = frame:CreateAnimationGroup();
+animGroup:SetLooping("REPEAT");
+local fadeIn = animGroup:CreateAnimation("Alpha");
+fadeIn:SetDuration(1);
+fadeIn:SetFromAlpha(0.2);
+fadeIn:SetToAlpha(1);
+
+local fadeOut = animGroup:CreateAnimation("Alpha");
+fadeOut:SetDuration(1);
+fadeOut:SetFromAlpha(1);
+fadeOut:SetToAlpha(0.2);
+
+animGroup:SetPlaying(true);
+
 
 -- Hide initially (defer RestorePosition until PikaJohnesDB exists)
 frame:Hide();
@@ -57,16 +72,7 @@ PanelFrame = {
 
     Show = function()
         frame:Show();
-        iconTex:SetAlpha(0);
-        C_Timer.After(0.5, function()
-            iconTex:SetAlpha(1);
-        end);
-        C_Timer.After(2.5, function()
-            iconTex:SetAlpha(0);
-        end);
-        C_Timer.After(3.5, function()
-            frame:Hide();
-        end);
+        animGroup:Play();
         if Sound.Play then
             Sound.Play();
         end;
@@ -74,19 +80,14 @@ PanelFrame = {
 
     Hide = function()
         frame:Hide();
+        animGroup:Stop();
     end,
 
     Preview = function()
         frame:Show();
-        iconTex:SetAlpha(0);
-        C_Timer.After(0.5, function()
-            iconTex:SetAlpha(1);
-        end);
-        C_Timer.After(2.5, function()
-            iconTex:SetAlpha(0);
-        end);
-        C_Timer.After(3.5, function()
-            frame:Hide();
+        animGroup:Play();
+        C_Timer.After(3.0, function()
+            PanelFrame:Hide();
         end);
         if Sound.Play then
             Sound.Play();
