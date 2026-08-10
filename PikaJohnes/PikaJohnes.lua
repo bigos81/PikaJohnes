@@ -10,15 +10,20 @@ PIAlert:OnInitialize();
 FocusRemind:Initialize();
 Config:Initialize();
 
+-- Register with Blizzard Settings panel (follows BetterNSTTS ADDON_LOADED pattern)
+local settingsFrame = CreateFrame("FRAME");
+settingsFrame:RegisterEvent("ADDON_LOADED");
+settingsFrame:SetScript("OnEvent", function(self, event, name)
+    if name == "PikaJohnes" and Settings and Settings.RegisterVerticalLayoutCategory then
+        Config:BuildSettingsPanel();
+    end;
+end);
+
 -- Create main frame for event handling
 local mainFrame = CreateFrame("FRAME");
 mainFrame:RegisterEvent("PLAYER_ENTERING_WORLD");
-mainFrame:RegisterEvent("UNIT_SPELLCAST_SUCCEEDED");
-
 mainFrame.frame = mainFrame;
 
--- Link FocusRemind to use this frame
-FocusRemind.frame = mainFrame;
 mainFrame:SetScript("OnEvent", function(self, event, ...)
     if event == "PLAYER_ENTERING_WORLD" then
         FocusRemind:onPlayerEnteringWorld();
@@ -28,23 +33,19 @@ mainFrame:SetScript("OnEvent", function(self, event, ...)
             PIAlert.state = "IDLE";
             PanelFrame:Hide();
         end;
-end;
+    end;
 end);
 
 -- Override PIAlert alert triggers to use PanelFrame
-local originalCheck = PIAlert.CheckPIState;
-PIAlert._origCheckPIState = function(self)
-    self.state = "ALERT";
-    PanelFrame:Show();
-end;
-
--- Patch the manager's alert trigger
 PIAlert.TriggerAlert = function()
     if PIAlert.state ~= "ALERT" then
         PIAlert.state = "ALERT";
         PanelFrame:Show();
     end;
 end;
+
+-- Restore saved panel position
+PanelFrame:RestorePosition();
 
 -- Print startup message
 print("|cff4facfe[Pika-Johnes]|r |cffffff00Power Infusion Alert Addon loaded!|r");
