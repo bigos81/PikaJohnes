@@ -51,17 +51,12 @@ fadeOut:SetDuration(1);
 fadeOut:SetFromAlpha(1);
 fadeOut:SetToAlpha(0.2);
 
--- Restore saved position from DB on load (not just save the default 0,350)
+-- Restore saved position from DB on load 
 PikaJohnesDB = PikaJohnesDB or {};
 local savedPos = PikaJohnesDB.panelPosition;
 if savedPos then
     local p = savedPos.point or "CENTER";
     local rTo = savedPos.relativeTo or "UIParent";
-    if rTo ~= "UIParent" then
-        rTo = _G[rTo] or UIParent;
-    else
-        rTo = UIParent;
-    end
     local rPoint = savedPos.relativePoint;
     local xO = savedPos.xOffset or 0;
     local yO = savedPos.yOffset or 0;
