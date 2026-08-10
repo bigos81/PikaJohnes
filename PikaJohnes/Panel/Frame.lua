@@ -33,7 +33,7 @@ iconTex:SetTexture("Interface\\Icons\\spell_holy_powerinfusion");
 iconTex:SetVertexColor(1, 0.82, 0);
 
 -- "DRAG ME!" text label (always visible, centered on icon)
-local dragText = frame:CreateFontString(nil, "HIGHLIGHT");
+local dragText = frame:CreateFontString(nil, "OVERLAY");
 dragText:SetPoint("CENTER", frame, "CENTER", 0, 0);
 dragText:SetFont("Fonts\\FRIZQT__.ttf", 14, "OUTLINE");
 dragText:SetText("DRAG ME!");
@@ -125,7 +125,7 @@ function PanelFrame:ResetPosition()
     PikaJohnesDB = PikaJohnesDB or {};
     PikaJohnesDB.panelPosition = nil;
     frame:ClearAllPoints();
-    frame:SetPoint("CENTER", UIParent, "CENTER", 0, 350);
+    frame:SetPoint("CENTER", UIParent, "CENTER", 0, 220);
     PanelFrame:SavePosition();
 end;
 
@@ -149,8 +149,6 @@ function PanelFrame:Unlock()
     PikaJohnesDB = PikaJohnesDB or {};
     PikaJohnesDB.unlockFrame = true;
     
-    -- Restore position from DB (shows at the saved position, not 0,350)
-    PanelFrame:RestorePosition();
     -- Show the frame
     frame:Show();
     -- Show icon (static)
