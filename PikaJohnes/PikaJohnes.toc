@@ -1,7 +1,7 @@
-## Interface: 120100
-## Title: |cff4facfePika|cff3cc4cJohnes|r
+## Interface: 120100, 120007
+## Title: |cff4facfePika|rJohnes
 ## Notes: PI alert addon for Priest - tells you when to cast Power Infusion on your focus target
-## Author: Pika Team
+## Author: bigos
 ## Version: 0.1.0
 ## SavedVariables: PikaJohnesDB
 
@@ -11,3 +11,4 @@ PIAlert/Manager.lua
 FocusRemind/Tracker.lua
 Config/Config.lua
 PikaJohnes.lua
+

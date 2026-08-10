@@ -5,9 +5,17 @@ FocusRemind.hasRemindedOnEnter = false;
 FocusRemind.noFocusTimer = nil;
 FocusRemind.noFocusCountdown = 0;
 FocusRemind.lastFocusTime = nil;
-FocusRemind.announceEvent = nil;
 
 function FocusRemind:Initialize()
+    -- Create frame if not exists (must be called before event registration)
+    if not self.frame then
+        local frame = CreateFrame("FRAME", nil, UIParent);
+        frame:SetScript("OnEvent", function(event, ...)
+            FocusRemind:HandleEvent(event, ...);
+        end);
+        self.frame = frame;
+    end
+    
     self.hasRemindedOnEnter = false;
     self.noFocusTimer = nil;
     self.noFocusCountdown = 0;
@@ -15,31 +23,20 @@ function FocusRemind:Initialize()
     
     -- Register for events
     self.frame:RegisterEvent("PLAYER_ENTERING_WORLD");
-    self.frame:RegisterEvent("UPDATE_FOCUS");
-    self.frame:RegisterEvent("PARTY_MEMBERS_CHANGED");
-    self.frame:RegisterEvent("RAID_MEMBERS_CHANGED");
-end
+    self.frame:RegisterEvent("PLAYER_FOCUS_CHANGED");
 
-function FocusRemind:CreateFrame()
-    if not self.frame then
-        self.frame = CreateFrame("FRAME");
-    end
-    
-    self.frame:SetScript("OnEvent", function(self, event, ...)
-        self:GetParent():HandleEvent(event, ...);
-    end);
-    
-    -- Make sure parent (PikaJohnes) has HandleEvent
 end
 
 function FocusRemind:HandleEvent(event, ...)
     if event == "PLAYER_ENTERING_WORLD" then
         self:onPlayerEnteringWorld();
-    elseif event == "UPDATE_FOCUS" then
-        self:onUpdateFocus(...);
-    elseif event == "PARTY_MEMBERS_CHANGED" or event == "RAID_MEMBERS_CHANGED" then
-        -- Could trigger a re-check of group structure if needed
-    end;
+    elseif event == "PLAYER_FOCUS_CHANGED" then
+        self.lastFocusTime = GetTime();
+        
+        if self.noFocusCountdown > 0 then
+            self.noFocusCountdown = 0;
+        end;
+end;
 end
 
 function FocusRemind:onPlayerEnteringWorld()
@@ -63,15 +60,6 @@ function FocusRemind:onPlayerEnteringWorld()
     end
     
     self:SendReminder();
-end
-
-function FocusRemind:onUpdateFocus(unit, isFallback)
-    -- Reset the no-focus countdown when focus is set/changed
-    self.lastFocusTime = GetTime();
-    
-    if self.noFocusCountdown > 0 then
-        self.noFocusCountdown = 0;
-    end;
 end
 
 function FocusRemind:SendReminder()

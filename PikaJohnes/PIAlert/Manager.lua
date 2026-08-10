@@ -74,7 +74,10 @@ function PIAlert:OnInitialize()
 end
 
 function PIAlert:CheckPIState()
-    local start, duration, enabled = GetSpellCooldown(PI_SPELL_ID);
+    local cdInfo = C_Spell.GetSpellCooldown(PI_SPELL_ID);
+    local start = cdInfo and cdInfo.startTime or nil;
+    local duration = cdInfo and cdInfo.duration or nil;
+    local enabled = cdInfo and cdInfo.enabled or nil;
     local isReady = (start == 0 or start == nil) and enabled ~= false;
     
     if self.state == "IDLE" and isReady then
@@ -208,10 +211,12 @@ function PIAlert:IsPIOnFocus()
 end
 
 function PIAlert:IsPIMastered()
-    local start, duration, enabled = GetSpellCooldown(PI_SPELL_ID);
+    local cdInfo = C_Spell.GetSpellCooldown(PI_SPELL_ID);
+    local start = cdInfo and cdInfo.startTime or nil;
+    local duration = cdInfo and cdInfo.duration or nil;
+    local enabled = cdInfo and cdInfo.enabled or nil;
     return (start == 0 or start == nil) and enabled ~= false;
 end
 
--- Expose to global namespace
-PIAlert:OnInitialize();
+-- Expose to global namespace (PikaJohnes.lua calls OnInitialize)
 _G.PIAlert = PIAlert;

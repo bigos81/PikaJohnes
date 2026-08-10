@@ -5,7 +5,7 @@ PikaJohnes = {};
 PikaJohnesDB = PikaJohnesDB or {};
 PikaJohnesDB.panelPosition = PikaJohnesDB.panelPosition or {};
 
--- Initialize modules
+-- Initialize modules in dependency order
 PIAlert:OnInitialize();
 FocusRemind:Initialize();
 Config:Initialize();
@@ -14,7 +14,7 @@ Config:Initialize();
 local mainFrame = CreateFrame("FRAME");
 mainFrame:RegisterEvent("PLAYER_ENTERING_WORLD");
 mainFrame:RegisterEvent("UNIT_SPELLCAST_SUCCEEDED");
-mainFrame:RegisterEvent("SPELL_QUEUE_UPDATE");
+
 mainFrame.frame = mainFrame;
 
 -- Link FocusRemind to use this frame
@@ -28,13 +28,7 @@ mainFrame:SetScript("OnEvent", function(self, event, ...)
             PIAlert.state = "IDLE";
             PanelFrame:Hide();
         end;
-    elseif event == "SPELL_QUEUE_UPDATE" then
-        local start, duration, enabled = GetSpellCooldown(10060);
-        if not ((start == 0 or start == nil) and enabled ~= false) then
-            PIAlert.state = "IDLE";
-            PanelFrame:Hide();
-        end;
-    end;
+end;
 end);
 
 -- Override PIAlert alert triggers to use PanelFrame

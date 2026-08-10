@@ -7,6 +7,7 @@ local PanelFrame = {};
 local frame = CreateFrame("FRAME", "PikaJohnesPanelFrame", UIParent);
 frame:SetSize(256, 256);
 frame:SetPoint("CENTER");
+frame:SetToplevel(true);
 
 -- Make it draggable
 frame:EnableMouse(true);
@@ -34,35 +35,29 @@ frame:SetScript("OnDragStop", function(self)
     db.yOffset = yOfs;
 end);
 
--- Restore position from saved vars
-local function RestorePosition()
-    local db = PikaJohnesDB and PikaJohnesDB.panelPosition;
-    if db then
-        frame:SetPoint(db.point or "CENTER", UIParent, db.relativePoint or "CENTER", db.xOffset or 0, db.yOffset or 0);
-    end
-end
-
--- Background with glow effect
+-- Background with glow effect using textures instead of SetBackdrop
 local bg = CreateFrame("FRAME", nil, frame);
 bg:SetAllPoints();
-bg:SetBackdrop({
-    bgFile = "Interface\\Buttons\\WHITE8x8",
-    edgeFile = "Interface\\Buttons\\White8x8",
-    tile = true,
-    tileSize = 256,
-    edgeSize = 4,
-    insets = { left = 4, right = 4, top = 4, bottom = 4 },
-});
-bg:SetBackdropColor(0, 0, 0, 0.8);
-bg:SetBackdropBorderColor(1, 0.82, 0, 1); -- golden border (PI color)
+bg:SetFrameLevel(0);
 
--- PI Spell Icon
+-- Use texture layers for background (replaces SetBackdrop)
+local bgTex = bg:CreateTexture(nil, "BACKGROUND");
+bgTex:SetAllPoints();
+bgTex:SetColorTexture(0, 0, 0, 0.8);
+
+-- Border overlay
+local borderTex = CreateFrame("FRAME", nil, frame);
+borderTex:SetAllPoints();
+borderTex:SetFrameLevel(1);
+borderTex.bgTex = borderTex:CreateTexture(nil, "BACKGROUND");
+borderTex.bgTex:SetAllPoints();
+borderTex.bgTex:SetColorTexture(1, 0.82, 0, 1);
+
+-- PI Spell Icon button
 local icon = CreateFrame("BUTTON", nil, frame);
 icon:SetSize(128, 128);
 icon:SetPoint("CENTER");
 icon:RegisterForClicks("LeftButtonUp", "RightButtonUp");
-
--- Set the spell icon
 icon:SetNormalTexture("Interface\\Icons\\spell_holy_powerinfusion");
 local normalTex = icon:GetNormalTexture();
 normalTex:SetAllPoints();
@@ -79,33 +74,28 @@ icon:SetScript("OnLeave", function(self)
     GameTooltip:Hide();
 end);
 
--- Glow animation (alpha pulse)
+-- Outer glow overlay with separate animation
+local outerGlow = CreateFrame("FRAME", nil, frame);
+outerGlow:SetAllPoints();
+outerGlow:SetFrameLevel(2);
+outerGlow.bgTex = outerGlow:CreateTexture(nil, "BACKGROUND");
+outerGlow.bgTex:SetAllPoints();
+outerGlow.bgTex:SetColorTexture(1, 0.82, 0, 0);
+
+-- Glow animation (alpha pulse) on bg frame
 local glowAnimGroup = bg:CreateAnimationGroup();
 local glowAlpha = glowAnimGroup:CreateAnimation("Alpha");
 glowAlpha:SetDuration(0.5);
-glowAlpha:SetFromTo(1, 0.4);
-glowAlpha:SetSmoothing("IN_OUT");
+glowAlpha:SetFromAlpha(1);
+glowAlpha:SetToAlpha(0.4);
 glowAnimGroup:SetLooping("REPEAT");
 
--- Outer glow overlay
-local outerGlow = CreateFrame("FRAME", nil, frame);
-outerGlow:SetAllPoints();
-outerGlow:SetBackdrop({
-    bgFile = "Interface\\Buttons\\WHITE8x8",
-    edgeFile = "Interface\\Buttons\\WHITE8x8",
-    tile = true,
-    tileSize = 64,
-    edgeSize = 2,
-});
-outerGlow:SetBackdropColor(1, 0.82, 0, 0);
-outerGlow:SetFrameLevel(frame:GetFrameLevel() + 1);
-
--- Glow animation for outer overlay
+-- Outer glow animation on outerGlow frame
 local outerAnimGroup = outerGlow:CreateAnimationGroup();
 local outerAlpha = outerAnimGroup:CreateAnimation("Alpha");
 outerAlpha:SetDuration(0.75);
-outerAlpha:SetFromTo(0, 0.6);
-outerAlpha:SetSmoothing("IN_OUT");
+outerAlpha:SetFromAlpha(0);
+outerAlpha:SetToAlpha(0.6);
 outerAnimGroup:SetLooping("REPEAT");
 
 -- "PI" text label below icon
@@ -117,9 +107,8 @@ label:SetTextColor(1, 0.82, 0);
 label:SetShadowColor(0, 0, 0);
 label:SetShadowOffset(2, 2);
 
--- Hide initially
+-- Hide initially (defer RestorePosition until PikaJohnesDB exists)
 frame:Hide();
-RestorePosition();
 
 -- Public API
 PanelFrame = {
@@ -143,7 +132,6 @@ PanelFrame = {
     end,
     
     Preview = function()
-        RestorePosition();
         frame:Show();
         glowAnimGroup:Play();
         outerAnimGroup:Play();
