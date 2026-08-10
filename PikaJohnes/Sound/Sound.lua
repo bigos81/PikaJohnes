@@ -12,5 +12,8 @@ local function playTelephone()
 end
 
 function Sound.Play()
+    if not PikaJohnesDB or not PikaJohnesDB.soundEnabled then
+        return;
+    end;
     pcall(playTelephone);
 end
