@@ -5,6 +5,7 @@ Config.defaults = {
     remindFocus = true,       -- Remind to focus on instance entry
     announcePI = true,        -- Announce PI target to party/raid
     soundEnabled = true,      -- Enable/disable sounds
+    unlockFrame = false,      -- Unlock panel for repositioning (default locked)
 };
 
 function Config:Initialize()
@@ -66,6 +67,16 @@ function Config:BuildSettingsPanel()
         "Play alert sound", true);
     Settings.CreateCheckbox(category, soundEnabledSetting, "Enables or disables the audio alert when PI is ready.");
 
+    -- Toggle lock/unlock button
+    local lockBtn = CreateSettingsButtonInitializer(
+        "", "Toggle Lock", function()
+            if PanelFrame:IsUnlocked() then
+                PanelFrame:Lock();
+            else
+                PanelFrame:Unlock();
+            end;
+        end, "Toggles the panel between locked (normal alert behavior) and unlocked (visible, draggable, no animation).", false, nil, nil);
+
     -- Preview button
     local previewBtn = CreateSettingsButtonInitializer(
         "", "Preview Alert", function()
@@ -79,8 +90,16 @@ function Config:BuildSettingsPanel()
         end, "Resets the alert panel to center screen", false, nil, nil);
 
     local layout = SettingsPanel:GetLayout(category);
+    layout:AddInitializer(lockBtn);
     layout:AddInitializer(previewBtn);
     layout:AddInitializer(resetPosBtn);
+
+    -- Initialize panel state based on current DB value
+    if PikaJohnesDB and PikaJohnesDB.unlockFrame == true then
+        PanelFrame:Unlock();
+    else
+        PanelFrame:Lock();
+    end;
 
     Settings.RegisterAddOnCategory(category);
 end
