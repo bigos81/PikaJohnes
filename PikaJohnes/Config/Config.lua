@@ -31,19 +31,19 @@ local function SlashCommand(msg)
         FocusRemind:AnnouncePIFocus();
     elseif msg == "status" then
         DEFAULT_CHAT_FRAME:AddMessage("|cff4facfe[Pika-Johnes]|r State: " .. (PIAlert.state or "unknown"));
-        DEFAULT_CHAT_FRAME:AddMessage("|cff4facfe[Pika-Johnes]|r PI Ready: " .. tostring(PIAlert:IsPIMastered()));
+        DEFAULT_CHAT_FRAME:AddMessage("|cff4facfe[Pika-Johnes]|r PI Ready: " .. tostring(PIAlert:IsPIReady()));
         DEFAULT_CHAT_FRAME:AddMessage("|cff4facfe[Pika-Johnes]|r Focus: " .. (UnitExists("focus") and UnitName("focus") or "none"));
         DEFAULT_CHAT_FRAME:AddMessage("|cff4facfe[Pika-Johnes]|r RemindFocus: " .. tostring(PikaJohnesDB.remindFocus));
         DEFAULT_CHAT_FRAME:AddMessage("|cff4facfe[Pika-Johnes]|r AnnouncePI: " .. tostring(PikaJohnesDB.announcePI));
     elseif msg == "showreminder" then
-        FocusRemind:ShowReminder();
         FocusRemind:SetReminderText("[Pika-Johnes] Reminder frame shown.");
+        FocusRemind:ShowReminder();
         DEFAULT_CHAT_FRAME:AddMessage("|cff4facfe[Pika-Johnes]|r Reminder frame shown.", 1, 1, 1);
     elseif msg == "hidereminder" then
         FocusRemind:HideReminder();
         DEFAULT_CHAT_FRAME:AddMessage("|cff4facfe[Pika-Johnes]|r Reminder frame hidden.", 1, 1, 1);
     else
-        DEFAULT_CHAT_FRAME:AddMessage("|cff4facfe[Pika-Johnes]|r Available commands: /pj preview, /pj status, /pj announce, /pj config, /pj showreminder, /pj hideminder");
+        DEFAULT_CHAT_FRAME:AddMessage("|cff4facfe[Pika-Johnes]|r Available commands: /pj preview, /pj status, /pj announce, /pj config, /pj showreminder, /pj hidereminder");
     end;
 end
 

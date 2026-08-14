@@ -100,6 +100,7 @@ function FocusRemind:Initialize()
     -- Register for events
     self.frame:RegisterEvent("PLAYER_ENTERING_WORLD");
     self.frame:RegisterEvent("PLAYER_FOCUS_CHANGED");
+    self.frame:RegisterEvent("READY_CHECK");
 
 end
 
@@ -107,15 +108,16 @@ function FocusRemind:HandleEvent(event, ...)
     if event == "PLAYER_ENTERING_WORLD" then
         self:onPlayerEnteringWorld();
     elseif event == "PLAYER_FOCUS_CHANGED" then
-        self.lastFocusTime = GetTime();
-        
-        if self.noFocusCountdown > 0 then
-            self.noFocusCountdown = 0;
-        end;
-        
         -- Hide reminder when focus is set
+        print("PLAYER_FOCUS_CHANGED event fired");
         if UnitExists("focus") then
             self:HideReminder();
+        end;
+    elseif event == "READY_CHECK" then
+        -- Answer the ready check and announce PI focus if we have focus
+        print("READY_CHECK event fired");
+        if UnitExists("focus") then
+            self:AnnouncePIFocus();
         end;
     end;
 end
@@ -153,47 +155,19 @@ end
 function FocusRemind:AnnouncePIFocus()
     local isInInstance, instanceType = IsInInstance();
     if not isInInstance then
-        return;
+        -- return;
     end
     
     -- Determine chat channel based on group type
-    local chatCmd = (instanceType == "raid") and "/raid" or "/party";
+    local chatType = (instanceType == "raid") and "RAID" or "PARTY";
     
     if UnitExists("focus") then
         local focusName = UnitName("focus");
-        local focusClass = UnitClass("focus");
-        local classColor;
-        
-        if focusClass then
-            local color = RAID_CLASS_COLORS[strupper(focusClass)];
-            if color then
-                classColor = "|c" .. color.colorStr;
-            end;
-        end;
-        
-        local message = string.format("PI target: %s%s|r", focusName or "Unknown", classColor or "");
-        self:SetReminderText("[Pika-Johnes] " .. message);
-        self:ShowReminder();
-        
-        C_Timer.After(5.0, function()
-            self:HideReminder();
-        end);
-        
-    else
-        -- No focus - announce we'll use on CD
-        local message = "";
-        if self.lastFocusTime and (GetTime() - self.lastFocusTime) > 30 then
-            message = "Focus not selected for 30s. PI on cooldown on random player.";
-        else
-            message = "No focus target! Please set your focus!";
-        end;
-        self:SetReminderText("[Pika-Johnes] " .. message);
-        self:ShowReminder();
-        
-        C_Timer.After(5.0, function()
-            self:HideReminder();
-        end);
-    end;
+
+        local message = string.format("PI targeting: %s", focusName or "Unknown");
+        print(message);
+        C_ChatInfo.SendChatMessage(message, chatType);
+    end
 end
 
 -- Expose globally
