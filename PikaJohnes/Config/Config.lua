@@ -35,8 +35,15 @@ local function SlashCommand(msg)
         DEFAULT_CHAT_FRAME:AddMessage("|cff4facfe[Pika-Johnes]|r Focus: " .. (UnitExists("focus") and UnitName("focus") or "none"));
         DEFAULT_CHAT_FRAME:AddMessage("|cff4facfe[Pika-Johnes]|r RemindFocus: " .. tostring(PikaJohnesDB.remindFocus));
         DEFAULT_CHAT_FRAME:AddMessage("|cff4facfe[Pika-Johnes]|r AnnouncePI: " .. tostring(PikaJohnesDB.announcePI));
+    elseif msg == "showreminder" then
+        FocusRemind:ShowReminder();
+        FocusRemind:SetReminderText("[Pika-Johnes] Reminder frame shown.");
+        DEFAULT_CHAT_FRAME:AddMessage("|cff4facfe[Pika-Johnes]|r Reminder frame shown.", 1, 1, 1);
+    elseif msg == "hidereminder" then
+        FocusRemind:HideReminder();
+        DEFAULT_CHAT_FRAME:AddMessage("|cff4facfe[Pika-Johnes]|r Reminder frame hidden.", 1, 1, 1);
     else
-        DEFAULT_CHAT_FRAME:AddMessage("|cff4facfe[Pika-Johnes]|r Available commands: /pj preview, /pj status, /pj announce, /pj config");
+        DEFAULT_CHAT_FRAME:AddMessage("|cff4facfe[Pika-Johnes]|r Available commands: /pj preview, /pj status, /pj announce, /pj config, /pj showreminder, /pj hideminder");
     end;
 end
 

@@ -27,11 +27,13 @@ mainFrame.frame = mainFrame;
 mainFrame:SetScript("OnEvent", function(self, event, ...)
     if event == "PLAYER_ENTERING_WORLD" then
         FocusRemind:onPlayerEnteringWorld();
+        FocusRemind:HideReminder();
     elseif event == "UNIT_SPELLCAST_SUCCEEDED" then
         local caster, spellId = ...;
         if caster == "player" and spellId == 10060 then
             PIAlert.state = "IDLE";
             PanelFrame:Hide();
+            FocusRemind:HideReminder();
         end;
     end;
 end);

@@ -32,24 +32,31 @@ iconTex:SetAllPoints();
 iconTex:SetTexture("Interface\\Icons\\spell_holy_powerinfusion");
 iconTex:SetVertexColor(1, 0.82, 0);
 
+-- Blizzard ready-cooldown border glow (marching ants)
+local glow = frame:CreateTexture(nil, "OVERLAY");
+glow:SetTexture("Interface\\SpellActivationOverlay\\IconAlertAnts");
+glow:SetBlendMode("ADD");
+glow:ClearAllPoints();
+glow:SetPoint("TOPLEFT", frame, "TOPLEFT", -4, 4);
+glow:SetPoint("BOTTOMRIGHT", frame, "BOTTOMRIGHT", 4, -4);
+glow:Hide();
+
+
 -- "DRAG ME!" text label (always visible, centered on icon)
 local dragText = frame:CreateFontString(nil, "OVERLAY");
 dragText:SetPoint("CENTER", frame, "CENTER", 0, 0);
 dragText:SetFont("Fonts\\FRIZQT__.ttf", 14, "OUTLINE");
 dragText:SetText("DRAG ME!");
 
--- Create blinking animation (autocast glow pattern)
-local animGroup = frame:CreateAnimationGroup();
-animGroup:SetLooping("REPEAT");
-local fadeIn = animGroup:CreateAnimation("Alpha");
-fadeIn:SetDuration(1);
-fadeIn:SetFromAlpha(0.2);
-fadeIn:SetToAlpha(1);
+-- Marching ants animation (OnUpdate using Blizzard's AnimateTexCoords)
+local animFunc = TextureUtil and TextureUtil.AnimateTexCoords or AnimateTexCoords;
+frame:SetScript("OnUpdate", function(self, elapsed)
+    if glow:IsShown() and animFunc then
+        animFunc(glow, 256, 256, 48, 48, 22, elapsed, 0.01);
+    end;
+end);
 
-local fadeOut = animGroup:CreateAnimation("Alpha");
-fadeOut:SetDuration(1);
-fadeOut:SetFromAlpha(1);
-fadeOut:SetToAlpha(0.2);
+
 
 -- Restore saved position from DB on load 
 PikaJohnesDB = PikaJohnesDB or {};
@@ -134,8 +141,6 @@ function PanelFrame:Lock()
     iconTex:Hide();
     -- Hide drag text
     dragText:Hide();
-    -- Start animation
-    animGroup:Play();
     -- Disable mouse interaction
     frame:EnableMouse(false);
 end;
@@ -150,8 +155,6 @@ function PanelFrame:Unlock()
     iconTex:Show();
     -- Show drag text
     dragText:Show();
-    -- Stop animation (static icon)
-    animGroup:Stop();
     -- Enable mouse interaction
     frame:EnableMouse(true);
 end;
@@ -168,7 +171,7 @@ PanelFrame = {
         if PanelFrame:IsUnlocked() then return end;
         frame:Show();
         iconTex:Show();
-        animGroup:Play();
+        glow:Show();
         if Sound.Play then
             Sound.Play();
         end;
@@ -178,14 +181,14 @@ PanelFrame = {
         if PanelFrame:IsUnlocked() then return end;
         frame:Hide();
         iconTex:Hide();
-        animGroup:Stop();
+        glow:Hide();
     end,
 
     Preview = function()
         if PanelFrame:IsUnlocked() then return end;
         frame:Show();
         iconTex:Show();
-        animGroup:Play();
+        glow:Show();
         C_Timer.After(3.0, function()
             PanelFrame:Hide();
         end);

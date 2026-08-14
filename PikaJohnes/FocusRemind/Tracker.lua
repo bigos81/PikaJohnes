@@ -6,6 +6,79 @@ FocusRemind.noFocusTimer = nil;
 FocusRemind.noFocusCountdown = 0;
 FocusRemind.lastFocusTime = nil;
 
+function FocusRemind:CreateReminderFrame()
+    if self.reminderFrame then
+        return self.reminderFrame;
+    end
+    
+    local frame = CreateFrame("FRAME", nil, UIParent);
+    frame:SetSize(320, 40);
+    frame:SetFrameStrata("MEDIUM");
+    frame:SetFrameLevel(10);
+    frame:EnableMouse(false);
+    frame:SetClampedToScreen(true);
+    
+    -- Anchor: 50% from center to top of screen (750 from bottom on 1000px screen)
+    frame:SetPoint("BOTTOM", UIParent, "BOTTOM", 0, 750);
+    
+    -- Background
+    local bg = frame:CreateTexture(nil, "BACKGROUND");
+    bg:SetAllPoints(frame);
+    -- bg:SetTexture(0, 0, 0, 0.75);
+    
+    -- Inset border texture (visible border)
+    local border = frame:CreateTexture(nil, "BORDER");
+    border:SetBlendMode("ADD");
+    -- border:SetTexture(0.3, 0.3, 0.3, 1);
+    border:SetPoint("TOPLEFT", frame, "TOPLEFT", 2, -2);
+    border:SetPoint("BOTTOMRIGHT", frame, "BOTTOMRIGHT", -2, 2);
+    
+    -- Icon (Power Infusion)
+    local icon = frame:CreateTexture(nil, "OVERLAY");
+    icon:SetSize(28, 28);
+    icon:SetPoint("LEFT", frame, "LEFT", 8, 0);
+    icon:SetTexture("Interface\\Icons\\spell_holy_powerinfusion");
+    icon:SetVertexColor(1, 0.82, 0);
+    
+    -- Reminder text
+    local text = frame:CreateFontString(nil, "OVERLAY", "GameFontNormalLarge");
+    text:SetPoint("LEFT", icon, "RIGHT", 6, 0);
+    text:SetPoint("RIGHT", frame, "RIGHT", -8, 0);
+    text:SetJustifyH("LEFT");
+    text:SetNonSpaceWrap(true);
+    text:SetWordWrap(true);
+    text:SetHeight(36);
+    
+    
+    self.reminderFrame = frame;
+    self.reminderBg = bg;
+    self.reminderBorder = border;
+    self.reminderIcon = icon;
+    self.reminderText = text;
+    
+    return frame;
+end
+
+function FocusRemind:SetReminderText(msg)
+    if not self.reminderFrame then
+        self:CreateReminderFrame();
+    end
+    self.reminderText:SetText(msg);
+end
+
+function FocusRemind:ShowReminder()
+    if not self.reminderFrame then
+        self:CreateReminderFrame();
+    end
+    self.reminderFrame:Show();
+end
+
+function FocusRemind:HideReminder()
+    if self.reminderFrame then
+        self.reminderFrame:Hide();
+    end
+end
+
 function FocusRemind:Initialize()
     -- Create frame if not exists (must be called before event registration)
     if not self.frame then
@@ -15,6 +88,9 @@ function FocusRemind:Initialize()
         end);
         self.frame = frame;
     end
+    
+    self:CreateReminderFrame();
+    self.reminderFrame:Hide();
     
     self.hasRemindedOnEnter = false;
     self.noFocusTimer = nil;
@@ -36,7 +112,12 @@ function FocusRemind:HandleEvent(event, ...)
         if self.noFocusCountdown > 0 then
             self.noFocusCountdown = 0;
         end;
-end;
+        
+        -- Hide reminder when focus is set
+        if UnitExists("focus") then
+            self:HideReminder();
+        end;
+    end;
 end
 
 function FocusRemind:onPlayerEnteringWorld()
@@ -63,11 +144,10 @@ function FocusRemind:onPlayerEnteringWorld()
 end
 
 function FocusRemind:SendReminder()
-    -- Print reminder message
-    DEFAULT_CHAT_FRAME:AddMessage("|cff4facfe[Pika-Johnes]|r |cffffff00Please focus a player for Power Infusion!", 1, 1, 1);
-    
-    -- Also play a distinct sound
-    PlaySoundFile("Interface\\Addons\\PikaJohnes\\Sound\\telephone-ring.wav", "Master");
+    -- Show reminder in floating frame
+    self:SetReminderText("[Pika-Johnes] Please focus a player for Power Infusion!");
+    self:ShowReminder();
+   
 end
 
 function FocusRemind:AnnouncePIFocus()
@@ -91,15 +171,28 @@ function FocusRemind:AnnouncePIFocus()
             end;
         end;
         
-        local message = string.format("|cff4facfe[Pika-Johnes]|r PI target: %s%s|r", focusName or "Unknown", classColor or "");
+        local message = string.format("PI target: %s%s|r", focusName or "Unknown", classColor or "");
+        self:SetReminderText("[Pika-Johnes] " .. message);
+        self:ShowReminder();
+        
+        C_Timer.After(5.0, function()
+            self:HideReminder();
+        end);
         
     else
         -- No focus - announce we'll use on CD
+        local message = "";
         if self.lastFocusTime and (GetTime() - self.lastFocusTime) > 30 then
-            DEFAULT_CHAT_FRAME:AddMessage("|cff4facfe[Pika-Johnes]|r Focus not selected for 30s. PI on cooldown on random player.", 1, 1, 1);
+            message = "Focus not selected for 30s. PI on cooldown on random player.";
         else
-            DEFAULT_CHAT_FRAME:AddMessage("|cff4facfe[Pika-Johnes]|r No focus target! Please set your focus!", 1, 1, 1);
+            message = "No focus target! Please set your focus!";
         end;
+        self:SetReminderText("[Pika-Johnes] " .. message);
+        self:ShowReminder();
+        
+        C_Timer.After(5.0, function()
+            self:HideReminder();
+        end);
     end;
 end
 
