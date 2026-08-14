@@ -15,7 +15,7 @@ piCastFrame:RegisterEvent("UNIT_SPELLCAST_SUCCEEDED");
 piCastFrame:SetScript("OnEvent", function(self, event, caster, spellId)
     if event == "UNIT_SPELLCAST_SUCCEEDED" and caster == "player" and string.find(tostring(spellId), "10060") then
         PIAlert.piIsReady = false;
-        PIAlert.pendingPiTimer = C_Timer.After(120, function()
+        PIAlert.pendingPiTimer = C_Timer.NewTimer(120, function()
             PIAlert.piIsReady = true;
             PIAlert.pendingPiTimer = nil;
         end);
