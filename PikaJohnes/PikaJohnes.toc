@@ -1,4 +1,4 @@
-## Interface: 120100, 120007
+## Interface: 120100
 ## Title: |cff4facfePika|rJohnes
 ## Notes: PI alert addon for Priest - tells you when to cast Power Infusion on your focus target
 ## Author: bigos
