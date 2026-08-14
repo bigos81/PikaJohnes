@@ -101,6 +101,12 @@ function PIAlert:CheckPIState()
     -- if out of combat, we can use C_Spell.GetSpellCooldown to check if PI is ready
     if not UnitAffectingCombat("player") then
         local cdInfo = C_Spell.GetSpellCooldown(PI_SPELL_ID);
+        if issecretvalue(cdInfo.duration) then
+            C_Timer.After(self.pollInterval, function()
+            self:CheckPIState();
+            end);
+            return;
+        end
         if cdInfo.duration == 0 then
             PIAlert.piIsReady = true;
             if PIAlert.pendingPiTimer then
