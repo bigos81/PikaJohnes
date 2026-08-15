@@ -1,4 +1,9 @@
 -- PikaJohnes main entry point
+local _, player_class = UnitClass("player")
+if player_class ~= "PRIEST" then
+    return
+end
+
 PikaJohnes = {}
 
 -- Ensure saved vars exist

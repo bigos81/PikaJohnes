@@ -1,3 +1,8 @@
+local _, player_class = UnitClass("player")
+if player_class ~= "PRIEST" then
+    return
+end
+
 local Config = {}
 
 -- Default config

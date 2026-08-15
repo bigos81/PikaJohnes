@@ -1,5 +1,11 @@
+local _, player_class = UnitClass("player")
+if player_class ~= "PRIEST" then
+    return
+end
+
+
 local PI_SPELL_ID = 10060
-local GRACE_PERIOD_SECONDS = 3 -- Grace period after a tracked spell is cast on focus before we alert for PI
+local GRACE_PERIOD_SECONDS = 5 -- Grace period after a tracked spell is cast on focus before we alert for PI
 
 local PIAlert = {}
 PIAlert.state = "IDLE" -- IDLE | WAITING | ALERT

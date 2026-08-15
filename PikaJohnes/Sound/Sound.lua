@@ -1,3 +1,9 @@
+local _, player_class = UnitClass("player")
+if player_class ~= "PRIEST" then
+    return
+end
+
+
 Sound = {}
 
 -- Play telephone ring (falls back to game sound if no custom audio)

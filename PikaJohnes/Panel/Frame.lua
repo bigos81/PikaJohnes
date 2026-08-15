@@ -1,3 +1,8 @@
+local _, player_class = UnitClass("player")
+if player_class ~= "PRIEST" then
+    return
+end
+
 local PI_SPELL_ID = 10060
 
 -- PanelFrame module: handles the alert panel UI
