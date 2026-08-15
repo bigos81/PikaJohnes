@@ -13,6 +13,9 @@ PIAlert.pendingPiTimer = nil;
 local piCastFrame = CreateFrame("FRAME");
 piCastFrame:RegisterEvent("UNIT_SPELLCAST_SUCCEEDED");
 piCastFrame:SetScript("OnEvent", function(self, event, caster, spellId)
+    if caster == "focus" then
+        print("FOCUS: UNIT_SPELLCAST_SUCCEEDED", event, caster, spellId);
+    end
     if event == "UNIT_SPELLCAST_SUCCEEDED" and caster == "player" and string.find(tostring(spellId), "10060") then
         PIAlert.piIsReady = false;
         PIAlert.pendingPiTimer = C_Timer.NewTimer(120, function()
