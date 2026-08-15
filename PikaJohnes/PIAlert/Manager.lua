@@ -97,7 +97,7 @@ PIAlert.classCooldowns = {
     },
     ["PRIEST"] = {
         228260,  -- Voidform (Shadow)
-        32379,  -- Shadow word Death (Shadow)
+--        32379,  -- Shadow word Death (Shadow) -- debug for follower dungeons
     },
 };
 
