@@ -12,7 +12,7 @@ PIAlert.recentlyCast = {} -- spellId -> timestamp, tracks focus casts of our tra
 local function ExtractSpellIdFromCastLine(castLine)
     castLine = tostring(castLine)
     if not string.find(castLine, "Cast-") then return nil end
-    local _, _, _, _, foundSpellStr = strsplit("-", castLine)
+    local _, _, _, _,_, foundSpellStr = strsplit("-", castLine)
     return tonumber(foundSpellStr)
 end
 
