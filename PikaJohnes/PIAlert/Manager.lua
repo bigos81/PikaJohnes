@@ -8,20 +8,37 @@ PIAlert.cooldownStart = nil;
 PIAlert.alertEnteredTime = 0;
 PIAlert.piIsReady = true;
 PIAlert.pendingPiTimer = nil;
+PIAlert.recentlyCast = {}; -- spellId -> timestamp, tracks focus casts of our tracked spells
+
+local function ExtractSpellIdFromCastLine(castLine)
+    castLine = tostring(castLine);
+    if not string.find(castLine, "Cast-") then return nil; end
+    local _, _, _, _, _, foundSpellStr = strsplit("-", castLine);
+    return tonumber(foundSpellStr);
+end
 
 -- Frame to listen for PI cast event for cooldown tracking in combat or during event (e.g., Mythic+)
 local piCastFrame = CreateFrame("FRAME");
 piCastFrame:RegisterEvent("UNIT_SPELLCAST_SUCCEEDED");
 piCastFrame:SetScript("OnEvent", function(self, event, caster, spellId)
-    if caster == "focus" then
-        print("FOCUS: UNIT_SPELLCAST_SUCCEEDED", event, caster, spellId);
+    if event == "UNIT_SPELLCAST_SUCCEEDED" and caster == "focus" then
+        local foundSpellId = ExtractSpellIdFromCastLine(spellId);
+        for trackedSpellId in pairs(PIAlert.allCooldownSpells) do
+            if tonumber(trackedSpellId) == foundSpellId then
+                PIAlert.recentlyCast[trackedSpellId] = GetTime();
+                break;
+            end
+        end
     end
-    if event == "UNIT_SPELLCAST_SUCCEEDED" and caster == "player" and string.find(tostring(spellId), "10060") then
-        PIAlert.piIsReady = false;
-        PIAlert.pendingPiTimer = C_Timer.NewTimer(120, function()
-            PIAlert.piIsReady = true;
-            PIAlert.pendingPiTimer = nil;
-        end);
+    if event == "UNIT_SPELLCAST_SUCCEEDED" and caster == "player" then
+        local playerSpellId = ExtractSpellIdFromCastLine(spellId);
+        if playerSpellId == PI_SPELL_ID then
+            PIAlert.piIsReady = false;
+            PIAlert.pendingPiTimer = C_Timer.NewTimer(120, function()
+                PIAlert.piIsReady = true;
+                PIAlert.pendingPiTimer = nil;
+            end);
+        end
     end;
 end);
 
@@ -40,8 +57,7 @@ PIAlert.classCooldowns = {
     ["MAGE"] = {
         365350, -- Arcane Surge (Arcane)
         190319,  -- Combustion (Fire)
-        26297, -- Berserking (Frost)
-        1236994, -- Potion of Recklessness (Frost)
+        84714, -- Frozen Orb (Frost)
     },
     ["PALADIN"] = {
         31884, -- Avenging Wrath
@@ -49,7 +65,7 @@ PIAlert.classCooldowns = {
     ["ROGUE"] = {
         121471, -- Shadow Blades (Subtlety)
         315508, -- Roll the Bones (Outlaw)
-        1856, -- Vanish (Assassination)
+        360194, -- Death Mark (Assassination)
     },
     ["WARRIOR"] = {
         107574, -- Avatar
@@ -79,6 +95,10 @@ PIAlert.classCooldowns = {
         162264,  -- Metamorphosis (Havoc)
         1217607,  -- Void Metamorphosis (Devourer)
     },
+    ["PRIEST"] = {
+        228260,  -- Voidform (Shadow)
+        32379,  -- Shadow word Death (Shadow)
+    },
 };
 
 -- PI spell ID lookup map for quick checking
@@ -104,54 +124,65 @@ function PIAlert:CheckPIState()
     -- if out of combat, we can use C_Spell.GetSpellCooldown to check if PI is ready
     if not UnitAffectingCombat("player") then
         local cdInfo = C_Spell.GetSpellCooldown(PI_SPELL_ID);
-        if issecretvalue(cdInfo.duration) then
+        if not issecretvalue(cdInfo.duration) then
+            if cdInfo.duration == 0 then
+                PIAlert.piIsReady = true;
+                if PIAlert.pendingPiTimer then
+                    PIAlert.pendingPiTimer:Cancel();
+                    PIAlert.pendingPiTimer = nil;
+                end;
+            else
+                PIAlert.piIsReady = false;
+                if not PIAlert.pendingPiTimer then
+                    PIAlert.pendingPiTimer = C_Timer.NewTimer(cdInfo.duration, function()
+                        PIAlert.piIsReady = true;
+                        PIAlert.pendingPiTimer = nil;
+                    end);
+                end;
+            end;
             C_Timer.After(self.pollInterval, function()
-            self:CheckPIState();
+                self:CheckPIState();
             end);
             return;
         end
-        if cdInfo.duration == 0 then
-            PIAlert.piIsReady = true;
-            if PIAlert.pendingPiTimer then
-                PIAlert.pendingPiTimer:Cancel();
-                PIAlert.pendingPiTimer = nil;
-            end;
-        elseif self.state == "WAITING" or self.state == "ALERT" then
-            self.state = "IDLE";
-            PanelFrame:Hide();
-        end
-        C_Timer.After(self.pollInterval, function()
-            self:CheckPIState();
-        end);
-        return;
     end
     
     local isReady = PIAlert.piIsReady;
     
     if self.state == "IDLE" and isReady then
-        -- Check focus for cooldowns first before entering WAITING
-        if self:HasCooldownOnFocus() then
-            self.state = "ALERT";
-            self.alertEnteredTime = GetTime();
-            PanelFrame:Show();
-            Sound.Play();
+        -- Check focus for relevant cooldowns via aura before entering WAITING
+        local focusClass = self:GetFocusedClass();
+        local hasCooldownAura = PIAlert.classCooldowns[focusClass] ~= nil;
+        
+        if not UnitExists("focus") then
+            -- No valid focus, stay IDLE
+            C_Timer.After(self.pollInterval, function() self:CheckPIState(); end);
+            return;
+        elseif hasCooldownAura then
+            -- Focus has tracked cooldowns, enter WAITING for cast detection
+            PIAlert.recentlyCast = {}; -- clear stale entries on state transition
+            self.state = "WAITING";
+            self.alertEnteredTime = 0;
         else
             self.state = "WAITING";
             self.alertEnteredTime = 0;
         end
     elseif self.state == "WAITING" and isReady then
-        -- Check if focus now has a cooldown active
+        -- Check if focus cast one of our tracked spells (UNIT_SPELLCAST_SUCCEEDED)
         if not UnitExists("focus") then
             -- Focus lost, go back to IDLE
+            PIAlert.recentlyCast = {};
             self.state = "IDLE";
             self.alertEnteredTime = 0;
         elseif self:HasCooldownOnFocus() then
+            -- Focus cast a tracked spell, alert immediately
             self.state = "ALERT";
             self.alertEnteredTime = GetTime();
             PanelFrame:Show();
             Sound.Play();
         end
     elseif self.state == "WAITING" and not isReady then
+        PIAlert.recentlyCast = {};
         self.state = "IDLE";
         self.alertEnteredTime = 0;
         PanelFrame:Hide();
@@ -190,64 +221,18 @@ function PIAlert:GetFocusedClass()
     return nil;
 end
 
--- Use C_UnitAuras.GetAuraDataBySpellId for 12.1 API compatibility
--- This works during combat when auras are "secret" (index-based queries don't)
-function PIAlert:GetFocusBuffs()
-    if not UnitExists("focus") then
-        return {};
-    end
-    
-    local buffs = {};
-    
-    -- Query each known cooldown spell by ID using C_UnitAuras.GetAuraDataBySpellId (12.1 API)
-    for classKey, spells in pairs(PIAlert.classCooldowns) do
-        for _, spellId in ipairs(spells) do
-            if C_UnitAuras and C_UnitAuras.GetAuraDataBySpellId then
-                local auraData = C_UnitAuras.GetAuraDataBySpellId("focus", spellId);
-                if auraData and auraData.spellId == spellId then
-                    buffs[spellId] = {
-                        name = auraData.name,
-                        icon = auraData.iconFileId,
-                        duration = auraData.duration,
-                        expires = auraData.expirationTime,
-                        caster = auraData.caster,
-                    };
-                end;
-            end;
-        end;
-    end;
-    
-    return buffs;
-end
-
 function PIAlert:HasCooldownOnFocus()
     local focusClass = self:GetFocusedClass();
     if not focusClass then
         return false;
     end
     
-    -- Priests PI themselves, so skip them entirely (like healers/tanks)
-    if focusClass == "PRIEST" then
-        return false;
+    -- Check if any of our tracked cooldown spells were recently cast by focus
+    for spellId in pairs(PIAlert.allCooldownSpells) do
+        if PIAlert.recentlyCast[spellId] and (GetTime() - PIAlert.recentlyCast[spellId]) < 10 then
+            return true;
+        end
     end
-    
-    -- Get class-specific cooldowns
-    local relevantSpells = PIAlert.classCooldowns[focusClass];
-    
-    -- If no spells defined yet (placeholder), trigger on ANY buff to be permissive
-    if not relevantSpells or #relevantSpells == 0 then
-        return true;
-    end
-    
-    -- Check each spell ID against focus buffs using C_UnitAuras.GetAuraDataBySpellId (12.1 API)
-    for _, spellId in ipairs(relevantSpells) do
-        if C_UnitAuras and C_UnitAuras.GetAuraDataBySpellId then
-            local auraData = C_UnitAuras.GetAuraDataBySpellId("focus", spellId);
-            if auraData and auraData.spellId == spellId then
-                return true;
-            end;
-        end;
-    end;
     
     return false;
 end
