@@ -72,7 +72,7 @@ function Config:BuildSettingsPanel()
         category, "soundEnabled", "soundEnabled",
         PikaJohnesDB, Settings.VarType.Boolean,
         "Play alert sound", true);
-    Settings.CreateCheckbox(category, soundEnabledSetting, "Enables or disables the audio alert when PI is ready.");
+    Settings.CreateCheckbox(category, soundEnabledSetting, "Enables or disables the audio alert when PI alert is shown.");
 
     -- Toggle lock/unlock button
     local lockBtn = CreateSettingsButtonInitializer(
