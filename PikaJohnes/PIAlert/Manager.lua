@@ -102,7 +102,7 @@ PIAlert.classCooldowns = {
     },
     ["PRIEST"] = {
         228260,  -- Voidform (Shadow)
---        32379,  -- Shadow word Death (Shadow) -- debug for follower dungeons
+        32379,  -- Shadow word Death (Shadow) -- debug for follower dungeons
     },
 }
 
@@ -158,23 +158,16 @@ function PIAlert:CheckPIState()
     local isReady = PIAlert.piIsReady
     
     if self.state == "IDLE" and isReady then
-        -- Check focus for relevant casts and enter WAITING state
-        local focusClass = self:GetFocusedClass()
-        local hasCooldownAura = PIAlert.classCooldowns[focusClass] ~= nil
-        
         if not UnitExists("focus") then
             -- No valid focus, stay IDLE
             C_Timer.After(self.pollInterval, function() self:CheckPIState() end)
             return
-        elseif hasCooldownAura then
-            -- Focus has tracked cooldowns, enter WAITING for cast detection
-            PIAlert.recentlyCast = {} -- clear stale entries on state transition
-            self.state = "WAITING"
-            self.alertEnteredTime = 0
-        else
-            self.state = "WAITING"
-            self.alertEnteredTime = 0
         end
+        -- Focus has tracked cooldowns, enter WAITING for cast detection
+        PIAlert.recentlyCast = {} -- clear stale entries on state transition
+        self.state = "WAITING"
+        self.alertEnteredTime = 0
+        
     elseif self.state == "WAITING" and isReady then
         -- Check if focus cast one of our tracked spells (UNIT_SPELLCAST_SUCCEEDED)
         if not UnitExists("focus") then
@@ -210,26 +203,8 @@ function PIAlert:CheckPIState()
     end)
 end
 
-function PIAlert:GetFocusedClass()
-    if not UnitExists("focus") then
-        return nil
-    end
-    
-    -- UnitClass returns (className, localizedClassName) where className is English key like "PRIEST"
-    local classKey = select(2, UnitClass("focus"))
-    
-    -- In 12.1, UnitClass may return secret values during combat/encounters/M+
-    -- We use strupper to ensure uppercase comparison works
-    if classKey then
-        return strupper(classKey)
-    end
-    
-    return nil
-end
-
 function PIAlert:HasCooldownOnFocus()
-    local focusClass = self:GetFocusedClass()
-    if not focusClass then
+    if not UnitExists("focus") then
         return false
     end
     

@@ -24,33 +24,6 @@ settingsFrame:SetScript("OnEvent", function(self, event, name)
     end
 end)
 
--- Create main frame for event handling
-local mainFrame = CreateFrame("FRAME")
-mainFrame:RegisterEvent("PLAYER_ENTERING_WORLD")
-mainFrame.frame = mainFrame
-
-mainFrame:SetScript("OnEvent", function(self, event, ...)
-    if event == "PLAYER_ENTERING_WORLD" then
-        FocusRemind:onPlayerEnteringWorld()
-        FocusRemind:HideReminder()
-    elseif event == "UNIT_SPELLCAST_SUCCEEDED" then
-        local caster, spellId = ...
-        if caster == "player" and spellId == 10060 then
-            PIAlert.state = "IDLE"
-            PanelFrame:Hide()
-            FocusRemind:HideReminder()
-        end
-    end
-end)
-
--- Override PIAlert alert triggers to use PanelFrame
-PIAlert.TriggerAlert = function()
-    if PIAlert.state ~= "ALERT" then
-        PIAlert.state = "ALERT"
-        PanelFrame:Show()
-    end
-end
-
 -- Restore saved panel position
 PanelFrame:RestorePosition()
 

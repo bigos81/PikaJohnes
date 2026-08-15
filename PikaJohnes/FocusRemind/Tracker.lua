@@ -16,15 +16,14 @@ function FocusRemind:CreateReminderFrame()
         return self.reminderFrame
     end
     
-    local frame = CreateFrame("FRAME", nil, UIParent)
-    frame:SetSize(320, 40)
+    local frame = CreateFrame("FRAME", "REMINDER_FRAME", UIParent)
+    frame:SetSize(800, 40)
     frame:SetFrameStrata("MEDIUM")
     frame:SetFrameLevel(10)
     frame:EnableMouse(false)
     frame:SetClampedToScreen(true)
     
-    -- Anchor: 50% from center to top of screen (750 from bottom on 1000px screen)
-    frame:SetPoint("BOTTOM", UIParent, "BOTTOM", 0, 750)
+    frame:SetPoint("CENTER", UIParent, "CENTER", 0, 250)
     
     -- Background
     local bg = frame:CreateTexture(nil, "BACKGROUND")
@@ -47,12 +46,28 @@ function FocusRemind:CreateReminderFrame()
     
     -- Reminder text
     local text = frame:CreateFontString(nil, "OVERLAY", "GameFontNormalLarge")
+    text:SetTextHeight(26)
     text:SetPoint("LEFT", icon, "RIGHT", 6, 0)
     text:SetPoint("RIGHT", frame, "RIGHT", -8, 0)
     text:SetJustifyH("LEFT")
     text:SetNonSpaceWrap(true)
     text:SetWordWrap(true)
-    text:SetHeight(36)
+    text:SetHeight(52)
+    local anim = text:CreateAnimationGroup()
+    anim:SetLooping("BOUNCE")
+    local fadeOut = anim:CreateAnimation("Alpha")
+    fadeOut:SetFromAlpha(1)
+    fadeOut:SetToAlpha(0)
+    fadeOut:SetDuration(0.5)
+    fadeOut:SetOrder(1)
+
+    local fadeIn = anim:CreateAnimation("Alpha")
+    fadeIn:SetFromAlpha(0)
+    fadeIn:SetToAlpha(1)
+    fadeIn:SetDuration(0.5)
+    fadeIn:SetOrder(2)
+
+    anim:Play()
     
     
     self.reminderFrame = frame
@@ -76,6 +91,9 @@ function FocusRemind:ShowReminder()
         self:CreateReminderFrame()
     end
     self.reminderFrame:Show()
+    C_Timer.After(15, function()
+        self:HideReminder()
+    end)
 end
 
 function FocusRemind:HideReminder()
@@ -85,16 +103,11 @@ function FocusRemind:HideReminder()
 end
 
 function FocusRemind:Initialize()
-    -- Create frame if not exists (must be called before event registration)
-    if not self.frame then
-        local frame = CreateFrame("FRAME", nil, UIParent)
-        frame:SetScript("OnEvent", function(event, ...)
-            FocusRemind:HandleEvent(event, ...)
-        end)
-        self.frame = frame
-    end
-    
-    self:CreateReminderFrame()
+   
+    self.frame = self:CreateReminderFrame()
+    self.frame:SetScript("OnEvent", function(self, event, ...)
+        FocusRemind:HandleEvent(event, ...)
+    end)
     self.reminderFrame:Hide()
     
     self.hasRemindedOnEnter = false
@@ -114,15 +127,16 @@ function FocusRemind:HandleEvent(event, ...)
         self:onPlayerEnteringWorld()
     elseif event == "PLAYER_FOCUS_CHANGED" then
         -- Hide reminder when focus is set
-        print("PLAYER_FOCUS_CHANGED event fired")
         if UnitExists("focus") then
             self:HideReminder()
         end
     elseif event == "READY_CHECK" then
         -- Answer the ready check and announce PI focus if we have focus
-        print("READY_CHECK event fired")
+
         if UnitExists("focus") then
             self:AnnouncePIFocus()
+        else
+            self:SendReminder()
         end
     end
 end
