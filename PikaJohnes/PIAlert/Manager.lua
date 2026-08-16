@@ -25,19 +25,17 @@ end
 -- Frame to listen for PI cast event for cooldown tracking in combat or during event (e.g., Mythic+)
 local piCastFrame = CreateFrame("FRAME")
 piCastFrame:RegisterEvent("UNIT_SPELLCAST_SUCCEEDED")
-piCastFrame:SetScript("OnEvent", function(self, event, caster, spellId)
+piCastFrame:SetScript("OnEvent", function(self, event, caster, spellGUID, spellId)
     if event == "UNIT_SPELLCAST_SUCCEEDED" and caster == "focus" then
-        local foundSpellId = ExtractSpellIdFromCastLine(spellId)
         for trackedSpellId in pairs(PIAlert.allCooldownSpells) do
-            if tonumber(trackedSpellId) == foundSpellId then
+            if tonumber(trackedSpellId) == spellId then
                 PIAlert.recentlyCast[trackedSpellId] = GetTime()
                 break
             end
         end
     end
     if event == "UNIT_SPELLCAST_SUCCEEDED" and caster == "player" then
-        local playerSpellId = ExtractSpellIdFromCastLine(spellId)
-        if playerSpellId == PI_SPELL_ID then
+        if spellId == PI_SPELL_ID then
             PIAlert.piIsReady = false
             PIAlert.pendingPiTimer = C_Timer.NewTimer(120 - GRACE_PERIOD_SECONDS, function()
                 PIAlert.piIsReady = true
