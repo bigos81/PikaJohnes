@@ -47,3 +47,9 @@ This mechanism can fail if you will /reload or disconnect during encounter/comba
 
 ## Is the addon done?
 Far from it. It's in Proof of Concept stage and will undergo testing by myself. I'm hesitant on publishing the addon in this state on WOW addon pages as of now, but you are free to use the sources if you are brave enough :)
+
+# I'd like to thank you for this work
+Great! You can write me a nice private message or if you feel generous you can buy me a coffe using the button below.
+(NOTE: only donate if you DO HAVE spare income, I don't live of my GitHub donations, so it's really just a coffe for me)
+
+[!["Buy Me A Coffee"](https://www.buymeacoffee.com/assets/img/custom_images/black_img.png)](https://www.buymeacoffee.com/bigos81)
