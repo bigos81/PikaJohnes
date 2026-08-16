@@ -3,6 +3,7 @@ package-as: PikaJohnes
 ignore:
   - README.md
   - .gitignore
+  - CHANGELOG.md
   - changelog.md
 
 move-folders:
