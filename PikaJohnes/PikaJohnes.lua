@@ -1,6 +1,7 @@
 -- PikaJohnes main entry point
 local _, player_class = UnitClass("player")
 if player_class ~= "PRIEST" then
+    print("Pika-Johnes is a Priest exclusive addon, no point in loading it for " .. player_class)
     return
 end
 

@@ -94,7 +94,7 @@ PIAlert.classCooldowns = {
     ["SHAMAN"] = {
         114050,  -- Ascendance (Elemental)
         114051,  -- Ascendance (Enhancement)
-        114052,  -- Ascendance (Restoration)
+        114052,  -- Ascendance
     },
     ["DEMON_HUNTER"] = {
         162264,  -- Metamorphosis (Havoc)
@@ -102,7 +102,7 @@ PIAlert.classCooldowns = {
     },
     ["PRIEST"] = {
         228260,  -- Voidform (Shadow)
-        32379,  -- Shadow word Death (Shadow) -- debug for follower dungeons
+--        32379,  -- Shadow word Death (Shadow) -- debug for follower dungeons
     },
 }
 
