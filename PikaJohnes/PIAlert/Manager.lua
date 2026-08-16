@@ -15,13 +15,6 @@ PIAlert.piIsReady = true
 PIAlert.pendingPiTimer = nil
 PIAlert.recentlyCast = {} -- spellId -> timestamp, tracks focus casts of our tracked spells
 
-local function ExtractSpellIdFromCastLine(castLine)
-    castLine = tostring(castLine)
-    if not string.find(castLine, "Cast-") then return nil end
-    local _, _, _, _,_, foundSpellStr = strsplit("-", castLine)
-    return tonumber(foundSpellStr)
-end
-
 -- Frame to listen for PI cast event for cooldown tracking in combat or during event (e.g., Mythic+)
 local piCastFrame = CreateFrame("FRAME")
 piCastFrame:RegisterEvent("UNIT_SPELLCAST_SUCCEEDED")
