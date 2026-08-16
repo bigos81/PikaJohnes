@@ -46,7 +46,7 @@ The interesting part. It's not all sunshine and rainbows. The biggest issue is t
 This mechanism can fail if you will /reload or disconnect during encounter/combat. The addon will try to read the PI cooldown information whenever it's not secret to recover, but disconnecting or reloading during combat may result in false-positive alerts.
 
 ## Is the addon done?
-Far from it. It's in Proof of Concept stage and will undergo testing by myself. I'm hesitant on publishing the addon in this state on WOW addon pages as of now, but you are free to use the sources if you are brave enough :)
+Far from it. It's in Proof of Concept stage and will undergo testing by myself. I'm hesitant on publishing the addon in this state on WOW addon pages as of now, but you are free to use the sources if you are brave enough :) There is probably still some PoC leftover code inside. But the addon works and I've decided to start commiting the code to github rather than local repo only.
 
 # I'd like to thank you for this work
 Great! You can write me a nice private message or if you feel generous you can buy me a coffe using the button below.
