@@ -21,7 +21,7 @@ piCastFrame:RegisterEvent("UNIT_SPELLCAST_SUCCEEDED")
 piCastFrame:SetScript("OnEvent", function(self, event, caster, _, spellId)
     if event == "UNIT_SPELLCAST_SUCCEEDED" and caster == "focus" then
         for trackedSpellId in pairs(PIAlert.allCooldownSpells) do
-            if tonumber(trackedSpellId) == spellId then
+            if trackedSpellId == spellId then
                 PIAlert.recentlyCast[trackedSpellId] = GetTime()
                 break
             end
