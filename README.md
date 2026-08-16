@@ -1,3 +1,6 @@
+<div align="center"><img width="500" alt="pikajohnes" src="https://github.com/user-attachments/assets/34cf0779-fdd2-4515-8b60-7647b1d19351" /></div>
+
+
 # What is it?
 Pika-Johnes is a World of Warcraft addon to help priests cast Power Infusion in optimal timing. The optimal timing is when your teammate uses their own DPS coodldowns.
 
