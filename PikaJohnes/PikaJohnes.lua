@@ -29,6 +29,6 @@ end)
 PanelFrame:RestorePosition()
 
 -- Print startup message
-print("|cff4facfe[Pika-Johnes]|r |cffffff00Power Infusion Alert Addon loaded!|r")
-print("|cff4facfe[Pika-Johnes]|r Use /pj preview to see the alert panel.")
-print("|cff4facfe[Pika-Johnes]|r Use /pj status for current state.")
+print("|cff4facfe[PikaJohnes]|r |cffffff00PikaJohnes Addon loaded!|r")
+print("|cff4facfe[PikaJohnes]|r Use /pj preview to see the alert panel.")
+print("|cff4facfe[PikaJohnes]|r Use /pj status for current state.")

@@ -166,7 +166,7 @@ end
 
 function FocusRemind:SendReminder()
     -- Show reminder in floating frame
-    self:SetReminderText("[Pika-Johnes] Please focus a player for Power Infusion!")
+    self:SetReminderText("[PikaJohnes] Please focus a player for Power Infusion!")
     self:ShowReminder()
    
 end
@@ -183,8 +183,7 @@ function FocusRemind:AnnouncePIFocus()
     if UnitExists("focus") then
         local focusName = UnitName("focus")
 
-        local message = string.format("PI targeting: %s", focusName or "Unknown")
-        print(message)
+        local message = string.format("[PikaJohnes] PI targeting: %s", focusName or "Unknown")
         C_ChatInfo.SendChatMessage(message, chatType)
     end
 end

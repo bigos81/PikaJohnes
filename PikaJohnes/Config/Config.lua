@@ -37,7 +37,7 @@ local function SlashCommand(msg)
         DEFAULT_CHAT_FRAME:AddMessage("|cff4facfe[PikaJohnes]|r RemindFocus: " .. tostring(PikaJohnesDB.remindFocus))
         DEFAULT_CHAT_FRAME:AddMessage("|cff4facfe[PikaJohnes]|r AnnouncePI: " .. tostring(PikaJohnesDB.announcePI))
     elseif msg == "showreminder" then
-        FocusRemind:SetReminderText("[Pika-Johnes] Reminder frame shown.")
+        FocusRemind:SetReminderText("[PikaJohnes] Reminder frame shown.")
         FocusRemind:ShowReminder()
         DEFAULT_CHAT_FRAME:AddMessage("|cff4facfe[PikaJohnes]|r Reminder frame shown.", 1, 1, 1)
     elseif msg == "hidereminder" then
