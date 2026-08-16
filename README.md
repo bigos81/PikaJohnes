@@ -15,7 +15,17 @@ It's here to best get a macro going:
 #showtooltip Power Infusion
 /cast [@focus][] Power Infusion
 ```
-This will cast PI on your current focus without changing your current target.
+This will cast PI on your current focus without changing your current target, if no focus is provided it will be cast on yourself - choosing DPS in random manner.
+
+Or more sophisticated:
+```
+#showtooltip
+/cast [@focus,exists,help,nodead] Power Infusion
+/cast [target=mouseover,exists] Power Infusion
+/cast Power Infusion
+```
+Casts on focus, if focus is dead or not existent checks for your mouse-over, if that's not present it casts it on yourself.
+
 
 The addon also reminds you to put on focus when zoning to dungeon or raid and when ready check is issued and you have no one on focus. Additionally, the addon announces your PI target (your focus) when ready check is issued and you have a focus already. Here's how reminder text looks like (it's currently blinking):
 
