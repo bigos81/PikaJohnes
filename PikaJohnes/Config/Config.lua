@@ -30,31 +30,26 @@ local function SlashCommand(msg)
 
     if msg == "preview" then
         PanelFrame.Preview()
-    elseif msg == "config" then
-        Config:ShowConfigUI()
-    elseif msg == "announce" then
-        FocusRemind:AnnouncePIFocus()
     elseif msg == "status" then
-        DEFAULT_CHAT_FRAME:AddMessage("|cff4facfe[Pika-Johnes]|r State: " .. (PIAlert.state or "unknown"))
-        DEFAULT_CHAT_FRAME:AddMessage("|cff4facfe[Pika-Johnes]|r PI Ready: " .. tostring(PIAlert:IsPIReady()))
-        DEFAULT_CHAT_FRAME:AddMessage("|cff4facfe[Pika-Johnes]|r Focus: " .. (UnitExists("focus") and UnitName("focus") or "none"))
-        DEFAULT_CHAT_FRAME:AddMessage("|cff4facfe[Pika-Johnes]|r RemindFocus: " .. tostring(PikaJohnesDB.remindFocus))
-        DEFAULT_CHAT_FRAME:AddMessage("|cff4facfe[Pika-Johnes]|r AnnouncePI: " .. tostring(PikaJohnesDB.announcePI))
+        DEFAULT_CHAT_FRAME:AddMessage("|cff4facfe[PikaJohnes]|r State: " .. (PIAlert.state or "unknown"))
+        DEFAULT_CHAT_FRAME:AddMessage("|cff4facfe[PikaJohnes]|r PI Ready: " .. tostring(PIAlert:IsPIReady()))
+        DEFAULT_CHAT_FRAME:AddMessage("|cff4facfe[PikaJohnes]|r Focus: " .. (UnitExists("focus") and UnitName("focus") or "none"))
+        DEFAULT_CHAT_FRAME:AddMessage("|cff4facfe[PikaJohnes]|r RemindFocus: " .. tostring(PikaJohnesDB.remindFocus))
+        DEFAULT_CHAT_FRAME:AddMessage("|cff4facfe[PikaJohnes]|r AnnouncePI: " .. tostring(PikaJohnesDB.announcePI))
     elseif msg == "showreminder" then
         FocusRemind:SetReminderText("[Pika-Johnes] Reminder frame shown.")
         FocusRemind:ShowReminder()
-        DEFAULT_CHAT_FRAME:AddMessage("|cff4facfe[Pika-Johnes]|r Reminder frame shown.", 1, 1, 1)
+        DEFAULT_CHAT_FRAME:AddMessage("|cff4facfe[PikaJohnes]|r Reminder frame shown.", 1, 1, 1)
     elseif msg == "hidereminder" then
         FocusRemind:HideReminder()
-        DEFAULT_CHAT_FRAME:AddMessage("|cff4facfe[Pika-Johnes]|r Reminder frame hidden.", 1, 1, 1)
+        DEFAULT_CHAT_FRAME:AddMessage("|cff4facfe[PikaJohnes]|r Reminder frame hidden.", 1, 1, 1)
     else
-        DEFAULT_CHAT_FRAME:AddMessage("|cff4facfe[Pika-Johnes]|r Available commands: /pj preview, /pj status, /pj announce, /pj config, /pj showreminder, /pj hidereminder")
+        DEFAULT_CHAT_FRAME:AddMessage("|cff4facfe[PikaJohnes]|r Available commands: /pj preview, /pj status, /pj showreminder, /pj hidereminder")
     end
 end
 
 SlashCmdList["PIKAJOHNES"] = SlashCommand
 SLASH_PIKAJOHNES1 = "/pj"
-SLASH_PIKAJOHNES2 = "/pikajohnes"
 
 -- Blizzard Settings panel integration (follows BetterNSTTS pattern)
 function Config:BuildSettingsPanel()
