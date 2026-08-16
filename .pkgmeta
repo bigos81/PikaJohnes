@@ -1,0 +1,9 @@
+package-as: PikaJohnes
+
+ignore:
+  - README.md
+  - .gitignore
+  - changelog.md
+
+move-folders:
+  pika-johnes/PikaJohnes: PikaJohnes
