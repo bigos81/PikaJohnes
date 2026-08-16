@@ -1,4 +1,4 @@
-<div align="center"><img width="500" alt="pikajohnes" src="https://github.com/user-attachments/assets/34cf0779-fdd2-4515-8b60-7647b1d19351" /></div>
+<div align="center"><img width="500" alt="pikajohnes" src="https://github.com/user-attachments/assets/c6d0e4ec-c9a6-4f20-bfc5-902596d66eab" /></div>  
 
 
 # What is it?
