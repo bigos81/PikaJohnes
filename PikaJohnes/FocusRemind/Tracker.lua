@@ -5,12 +5,6 @@ end
 
 local FocusRemind = {}
 
--- Track state
-FocusRemind.hasRemindedOnEnter = false
-FocusRemind.noFocusTimer = nil
-FocusRemind.noFocusCountdown = 0
-FocusRemind.lastFocusTime = nil
-
 function FocusRemind:CreateReminderFrame()
     if self.reminderFrame then
         return self.reminderFrame
@@ -28,12 +22,10 @@ function FocusRemind:CreateReminderFrame()
     -- Background
     local bg = frame:CreateTexture(nil, "BACKGROUND")
     bg:SetAllPoints(frame)
-    -- bg:SetTexture(0, 0, 0, 0.75)
     
     -- Inset border texture (visible border)
     local border = frame:CreateTexture(nil, "BORDER")
     border:SetBlendMode("ADD")
-    -- border:SetTexture(0.3, 0.3, 0.3, 1)
     border:SetPoint("TOPLEFT", frame, "TOPLEFT", 2, -2)
     border:SetPoint("BOTTOMRIGHT", frame, "BOTTOMRIGHT", -2, 2)
     
@@ -110,11 +102,6 @@ function FocusRemind:Initialize()
     end)
     self.reminderFrame:Hide()
     
-    self.hasRemindedOnEnter = false
-    self.noFocusTimer = nil
-    self.noFocusCountdown = 0
-    self.lastFocusTime = nil
-    
     -- Register for events
     self.frame:RegisterEvent("PLAYER_ENTERING_WORLD")
     self.frame:RegisterEvent("PLAYER_FOCUS_CHANGED")
@@ -152,7 +139,6 @@ function FocusRemind:onPlayerEnteringWorld()
     
     -- Check if focus exists
     if UnitExists("focus") then
-        self.hasRemindedOnEnter = true
         return
     end
     
