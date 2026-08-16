@@ -1,10 +1,12 @@
 <div align="center"><img width="500" alt="pikajohnes" src="https://github.com/user-attachments/assets/c6d0e4ec-c9a6-4f20-bfc5-902596d66eab" /></div>  
 
-
 # What is it?
-Pika-Johnes is a World of Warcraft addon to help priests cast Power Infusion in optimal timing. The optimal timing is when your teammate uses their own DPS coodldowns.
+PikaJohnes is a World of Warcraft addon to help priests cast Power Infusion in optimal timing. The optimal timing is when your teammate uses their own DPS coodldowns.
 
 Back in the day a Weak Aura existed called "Dibs on Power Infusion". My goal is to recreate at least part of its functionality after 12.0 addon changes.
+
+# PikaJohnes - why this name?
+Well, it's something that was on my mind for a long time. Roughly ... it's: Power Infusion Kombat Asistance (PIKA) and Johnes is just for fun. I won't judge you if you hate that name :)
 
 # How does it work?
 The assumption is that you will focus your DPS. This is required as it's possible to monitor successful spell casts on your Focus target even during combat.
