@@ -38,6 +38,8 @@ At this point you can:
 - Turn announcing on/off
 - Change the place where the PI Alert icon is shown
 
+All options accessible though in-game Options->Addons.
+
 ## Limitations
 The interesting part. It's not all sunshine and rainbows. The biggest issue is that monitoring PI cooldown (your own) is actually not that straightforward in combat or during encounter. This requires the addon to monitor your casts, and if you successfully cast PI yourself, the 2 minute timer is set. Only after this timer is done, the addon will start monitoring focused player spells again. 
 
