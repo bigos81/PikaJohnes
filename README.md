@@ -8,7 +8,7 @@ The assumption is that you will focus your DPS. This is required as it's possibl
 
 When focused, the addon checks for major DPS cooldowns, and if the cooldown is used by the player and the priest had PI off cooldown the alert goes off: an icon is shown and a telephone ring sound is being played. Yep, you are being asked to PI your focus! This is how it looks like in game:
 
-<img width="500" alt="image" src="https://github.com/user-attachments/assets/2b3c47e8-dc1b-4262-a2c3-146147122e73" />
+<div align="center"><img width="500" alt="image" src="https://github.com/user-attachments/assets/2b3c47e8-dc1b-4262-a2c3-146147122e73" /></div>
 
 It's here to best get a macro going:
 ```
@@ -29,8 +29,7 @@ Casts on focus, if focus is dead or not existent checks for your mouse-over, if 
 
 The addon also reminds you to put on focus when zoning to dungeon or raid and when ready check is issued and you have no one on focus. Additionally, the addon announces your PI target (your focus) when ready check is issued and you have a focus already. Here's how reminder text looks like (it's currently blinking):
 
-<img width="500" alt="image" src="https://github.com/user-attachments/assets/87bd6029-e1a5-457d-9e9d-a66c44fbbfab" />
-
+<div align="center"><img width="500" alt="image" src="https://github.com/user-attachments/assets/87bd6029-e1a5-457d-9e9d-a66c44fbbfab" /></div>
 
 ## What can be configured?
 At this point you can:
