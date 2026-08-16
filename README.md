@@ -5,9 +5,6 @@ PikaJohnes is a World of Warcraft addon to help priests cast Power Infusion in o
 
 Back in the day a Weak Aura existed called "Dibs on Power Infusion". My goal is to recreate at least part of its functionality after 12.0 addon changes.
 
-# PikaJohnes - why this name?
-Well, it's something that was on my mind for a long time. Roughly ... it's: Power Infusion Kombat Assistance (PIKA) and Johnes is just for fun - it **was** to be from Indiana Jones (you probably can tell from logo lol) ... but you see how it turned up with that "h" inside. I won't judge you if you hate that name :)
-
 # How does it work?
 The assumption is that you will focus your DPS. This is required as it's possible to monitor successful spell casts on your Focus target even during combat.
 
@@ -52,6 +49,9 @@ This mechanism can fail if you will /reload or disconnect during encounter/comba
 
 # Is the addon done?
 Far from it. It's in Proof of Concept stage and will undergo testing by myself. I'm hesitant on publishing the addon in this state on WOW addon pages as of now, but you are free to use the sources if you are brave enough :) There is probably still some PoC leftover code inside. But the addon works and I've decided to start commiting the code to github rather than local repo only.
+
+# PikaJohnes - why this name?
+Well, it's something that was on my mind for a long time. Roughly ... it's: Power Infusion Kombat Assistance (PIKA) and Johnes is just for fun - it **was** to be from Indiana Jones (you probably can tell from logo LOL) ... but you see how it turned up with that "h" inside. The Kombat part is of course from Mortal Kombat, just to spell PIKA, not PICA... Yes, I'm not the most skilled copywriter as you can probably tell. I won't judge you if you hate that name :)
 
 # I'd like to thank you for this work
 Great! You can write me a nice private message or if you feel generous you can buy me a coffe using the button below.
