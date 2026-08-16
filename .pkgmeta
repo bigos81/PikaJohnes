@@ -6,4 +6,4 @@ ignore:
   - changelog.md
 
 move-folders:
-  pika-johnes/PikaJohnes: PikaJohnes
+  PikaJohnes/PikaJohnes: PikaJohnes
