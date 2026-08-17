@@ -3,6 +3,7 @@ if player_class ~= "PRIEST" then
     return
 end
 
+local REMINDER_DURATION = 10
 local FocusRemind = {}
 
 function FocusRemind:CreateReminderFrame()
@@ -83,7 +84,7 @@ function FocusRemind:ShowReminder()
         self:CreateReminderFrame()
     end
     self.reminderFrame:Show()
-    C_Timer.After(15, function()
+    C_Timer.After(REMINDER_DURATION, function()
         self:HideReminder()
     end)
 end

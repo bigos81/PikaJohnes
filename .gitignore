@@ -1,4 +1,6 @@
 .vscode/**
 *.md
+*.json
+node_modules
 install.sh
 !README.md

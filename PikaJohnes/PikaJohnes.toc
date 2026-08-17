@@ -2,7 +2,7 @@
 ## Title: |cff4facfePika|rJohnes
 ## Notes: PI alert addon for Priest - tells you when to cast Power Infusion on your focus target
 ## Author: bigos
-## Version: 0.1.0
+## Version: 0.3
 ## SavedVariables: PikaJohnesDB
 
 Sound/Sound.lua
